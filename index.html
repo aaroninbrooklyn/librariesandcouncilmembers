@@ -2,17 +2,37 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>BPL Branch Hover Info</title>
+    <title>BPL Hover Map with Instructions</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.css" rel="stylesheet" />
     <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { position: absolute; top: 0; bottom: 0; left: 300px; right: 0; }
+
+        #sidebar {
+            position: absolute;
+            width: 300px;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 1;
+        }
+
+        #sidebar img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
         .mapboxgl-popup-content {
-            font-family: Arial, sans-serif;
             font-size: 13px;
         }
+
         .popup-img {
             width: 100px;
             margin-top: 5px;
@@ -21,13 +41,21 @@
     </style>
 </head>
 <body>
+
+<div id="sidebar">
+    <h2>Welcome to the BPL Branch Map</h2>
+    <p>Hover over a branch to view info about its Council Member and district.</p>
+    <img src="https://i.imgur.com/9YxkRPq.png" alt="Instructions" />
+</div>
+
 <div id="map"></div>
+
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyb25pbmJyb29rbHluIiwiYSI6ImNtOGowMmZ0dzBjMDgycnB4eWdhZW9nZ2sifQ.Z70awiKsIraT8Mfh-T_iAg';
 
     const map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/aaroninbrooklyn/cm9gdcnhx00ga01r3c0t3hy99',
+        style: 'mapbox://styles/aaroninbrooklyn/cm9gelzax009201ryf7y83yjq',
         center: [-73.9266, 40.6343],
         zoom: 11.7
     });
@@ -38,7 +66,7 @@
     });
 
     map.on('load', () => {
-        map.on('mousemove', 'bklynlibrary-branches-0qfsv6', (e) => {
+        map.on('mousemove', 'BPLBranchesAllUpdated4-7m3r25', (e) => {
             const feature = e.features[0];
             const props = feature.properties;
 
@@ -46,16 +74,17 @@
                 <strong>Branch:</strong> ${props["branch"] || "N/A"}<br/>
                 <strong>Council District:</strong> ${props["CouncilDistrict"] || "N/A"}<br/>
                 <strong>Council Member:</strong> ${props["Council Member Name"] || "N/A"}<br/>
-                <img class="popup-img" src="${props["CMPhoto"] || ""}" alt="CM Photo" />
+                <img class="popup-img" src="${props["CM Photo"] || ""}" alt="CM Photo" />
             `;
 
             popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map);
         });
 
-        map.on('mouseleave', 'bklynlibrary-branches-0qfsv6', () => {
+        map.on('mouseleave', 'BPLBranchesAllUpdated4-7m3r25', () => {
             popup.remove();
         });
     });
 </script>
+
 </body>
 </html>

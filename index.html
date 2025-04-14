@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>BPL Branch Hover Info</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.1.0/mapbox-gl.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .mapboxgl-popup-content {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+        .popup-img {
+            width: 100px;
+            margin-top: 5px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYWFyb25pbmJyb29rbHluIiwiYSI6ImNtOGowMmZ0dzBjMDgycnB4eWdhZW9nZ2sifQ.Z70awiKsIraT8Mfh-T_iAg';
+
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/aaroninbrooklyn/cm9gdcnhx00ga01r3c0t3hy99',
+        center: [-73.9266, 40.6343],
+        zoom: 11.7
+    });
+
+    const popup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false
+    });
+
+    map.on('load', () => {
+        map.on('mousemove', 'bklynlibrary-branches-0qfsv6', (e) => {
+            const feature = e.features[0];
+            const props = feature.properties;
+
+            const popupHtml = `
+                <strong>Branch:</strong> ${props["branch"] || "N/A"}<br/>
+                <strong>Council District:</strong> ${props["CouncilDistrict"] || "N/A"}<br/>
+                <strong>Council Member:</strong> ${props["Council Member Name"] || "N/A"}<br/>
+                <img class="popup-img" src="${props["CMPhoto"] || ""}" alt="CM Photo" />
+            `;
+
+            popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map);
+        });
+
+        map.on('mouseleave', 'bklynlibrary-branches-0qfsv6', () => {
+            popup.remove();
+        });
+    });
+</script>
+</body>
+</html>
